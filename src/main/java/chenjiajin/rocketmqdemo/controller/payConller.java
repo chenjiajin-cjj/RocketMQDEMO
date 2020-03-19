@@ -42,7 +42,7 @@ public class payConller {
             打印一下结果看看
          */
         System.out.println(sendResult);
-        return null;
+        return sendResult;
     }
 
 }
