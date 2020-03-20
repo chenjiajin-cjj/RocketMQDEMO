@@ -30,12 +30,13 @@ public class PayConsumer {
         consumer.setNamesrvAddr(jmsConfig.NAME_SERVER_ADDR);
         //设置消费方式，从最后一个开始消费
         consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
-        //定义消费的主题
+        //定义消费的主题 好像这个和生产的主题一样就行了
         consumer.subscribe(jmsConfig.TOPIC, "*");
         consumer.registerMessageListener((MessageListenerConcurrently) (msgs, context) -> {
             MessageExt msg = msgs.get(0);
             //获取消息重复消费次数
             int times = msg.getReconsumeTimes();
+            System.out.println();
             System.out.println("重试次数=" + times);
             try {
                 System.out.printf("%s Receive New Messages: %s %n",
@@ -63,5 +64,4 @@ public class PayConsumer {
         consumer.start();
         System.out.println("consumer start .....");
     }
-
 }

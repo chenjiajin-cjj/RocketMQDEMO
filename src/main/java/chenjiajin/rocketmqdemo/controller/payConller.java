@@ -2,17 +2,22 @@ package chenjiajin.rocketmqdemo.controller;
 
 import chenjiajin.rocketmqdemo.jms.PayProducer;
 import chenjiajin.rocketmqdemo.jms.jmsConfig;
+import org.apache.rocketmq.client.producer.MessageQueueSelector;
 import org.apache.rocketmq.client.producer.SendCallback;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.apache.rocketmq.common.message.Message;
+import org.apache.rocketmq.common.message.MessageQueue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.UUID;
 
 
 @RestController
+@RequestMapping("/study_mq")
 public class payConller {
 
     //注入mq的配置
@@ -20,8 +25,15 @@ public class payConller {
     private PayProducer payProducer;
 
 
-    @GetMapping("/api/v1/pay_cb")
-    public Object callBack(String text) throws Exception {
+    /**
+     * 发送同步消息，不带key
+     *
+     * @param json
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/synchronous/send_no_key")
+    public Object synchronousSendNoKey(String json) throws Exception {
         /*
             创建一个mq的消息
             按顺序来
@@ -31,16 +43,9 @@ public class payConller {
             3.key：设置消费的唯一id
             4.body：往队列里面塞的信息 好像要byte的才行
          */
-        String uuid = UUID.randomUUID().toString().replaceAll("-", "");
-
-        //这个是没有加key的
-//        Message message = new Message(jmsConfig.TOPIC, "taga", ("hello xdclass rocketmq = " + text).getBytes());
-
-        //设置唯一的uuid 保证消息不会被重复投递   有加key
-        Message message = new Message(jmsConfig.TOPIC, "taga", uuid, ("hello xdclass rocketmq = " + text).getBytes());
+        Message message = new Message(jmsConfig.TOPIC, "taga", ("hello world rocketmq = " + json).getBytes());
 
         /*
-            message.setDelayTimeLevel(2);
             设置消息投递的延时级别   0 是不延时
             总共是18个等级
             1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h
@@ -51,37 +56,163 @@ public class payConller {
         message.setDelayTimeLevel(1);
 
         /*
-            1
-
             创建消息完毕之后，把消息发送出去
             send如果入参是单值   是同步发送 一收到就发出去，如果发送失败会进行重试
             同步发送有返回值
          */
-//        SendResult sendResult = payProducer.getProducer().send(message);
+        SendResult sendResult = payProducer.getProducer().send(message);
+        System.out.printf("发送结果=%s, msg=%s", sendResult.getSendStatus(), sendResult.toString());
 
-        /*
+        return "send synchronous no key ok";
+    }
 
-            2
+    /**
+     * 同步发送消息 有加key
+     *
+     * @param json
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/synchronous/send_have_key")
+    public Object synchronousSendHaveKey(String json) throws Exception {
+        //创建唯一的uuid
+        String uuid = UUID.randomUUID().toString().replaceAll("-", "");
 
-            异步发送 比同步发送的入参 多了个 new SendCallBack
-            异步发送没有返回值
-         */
+        //往队列里赛消息
+        Message message = new Message(jmsConfig.TOPIC, "taga", uuid, ("hello world rocketmq = " + json).getBytes());
+
+        //设置延时等级1是1s
+        message.setDelayTimeLevel(1);
+
+        //同步发送直接发
+        SendResult sendResult = payProducer.getProducer().send(message);
+
+        System.out.printf("发送结果=%s, msg=%s", sendResult.getSendStatus(), sendResult.toString());
+        return "send synchronous have key ok";
+    }
+
+    /**
+     * 异步发送 有加key
+     *
+     * @param json
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/asynchronization/send_have_key")
+    public Object asynchronizationSend(String json) throws Exception {
+        //设置唯一的uuid
+        String uuid = UUID.randomUUID().toString().replaceAll("-", "");
+
+        //往队列里赛消息
+        Message message = new Message(jmsConfig.TOPIC, "taga", uuid, ("hello world rocketmq = " + json).getBytes());
+
+        //设置发送的延迟时间 1是1s
+        message.setDelayTimeLevel(1);
+
+        //异步发送
         payProducer.getProducer().send(message, new SendCallback() {
+            //然后直接获得返回结果
             @Override
             public void onSuccess(SendResult sendResult) {
                 System.out.printf("发送结果=%s, msg=%s", sendResult.getSendStatus(), sendResult.toString());
             }
 
-            /**
-             * 补偿机制  也就是说如果异步发送失败了 就走这里 看是要重发还是怎样
-             */
+            //补偿机制  也就是说如果异步发送失败了 就走这里 看是要重发还是怎样
             @Override
             public void onException(Throwable throwable) {
                 System.out.println("异步发送失败了艾玛");
             }
         });
 
-        return "ok";
+        return "send asynchronization have key ok";
     }
 
+    /**
+     * 同步发送选择队列发送
+     *
+     * @param json
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/synchronous/send_check_queue")
+    public Object synchronousQuene(String json) throws Exception {
+        //创建唯一的uuid
+        String uuid = UUID.randomUUID().toString().replaceAll("-", "");
+
+        //往队列里赛消息
+        Message message = new Message(jmsConfig.TOPIC, "taga", uuid, ("hello world rocketmq = " + json).getBytes());
+
+        //设置延时等级1是1s
+        message.setDelayTimeLevel(1);
+
+        //同步发送选择队列发送
+        SendResult sendResult = payProducer.getProducer().send(message, new MessageQueueSelector() {
+            /**
+             *
+             * @param mqs 当前主题的所拥有的队列
+             * @param msg 发送消息
+             * @param arg 指定发送的队列
+             * @return
+             */
+            @Override
+            public MessageQueue select(List<MessageQueue> mqs, Message msg, Object arg) {
+                int queneNum = Integer.parseInt(arg.toString());
+                System.out.println("同步发送选择队列：" + queneNum);
+                return mqs.get(queneNum);
+            }
+        }, 2);
+
+        System.out.printf("发送结果=%s, msg=%s", sendResult.getSendStatus(), sendResult.toString());
+        return "send synchronous quene hava key ok";
+    }
+
+    /**
+     * 异步发送选择队列发送
+     *
+     * @param json
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/asynchronization/send_check_queue")
+    public Object asynchronizationQuene(String json) throws Exception {
+        //创建唯一的uuid
+        String uuid = UUID.randomUUID().toString().replaceAll("-", "");
+
+        //往队列里赛消息
+        Message message = new Message(jmsConfig.TOPIC, "taga", uuid, ("hello world rocketmq = " + json).getBytes());
+
+        //设置延时等级1是1s
+        message.setDelayTimeLevel(1);
+
+        //异步选择队列进行发送
+        payProducer.getProducer().send(message, new MessageQueueSelector() {
+            /**
+             *
+             * @param mqs 当前主题的所拥有的队列
+             * @param msg 发送消息
+             * @param arg 指定发送的队列
+             * @return
+             */
+            @Override
+            public MessageQueue select(List<MessageQueue> mqs, Message msg, Object arg) {
+                int queneNum = Integer.parseInt(arg.toString());
+                System.out.println("异步选择队列发送:" + queneNum);
+                return mqs.get(queneNum);
+            }
+        }, 1, new SendCallback() {
+            //发送成功的回调
+            @Override
+            public void onSuccess(SendResult sendResult) {
+                System.out.printf("发送结果=%s, msg=%s", sendResult.getSendStatus(), sendResult.toString());
+            }
+
+            //发送失败的回调
+            @Override
+            public void onException(Throwable throwable) {
+                System.out.println("异步发送选择队列失败了艾玛");
+            }
+        });
+
+        return "send asynchronization quene hava key ok";
+    }
 }
