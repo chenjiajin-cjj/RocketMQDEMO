@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * 模拟测试一些投递数据
+ */
 
 @RestController
 @RequestMapping("/study_mq")
@@ -215,4 +218,6 @@ public class payConller {
 
         return "send asynchronization quene hava key ok";
     }
+
+
 }

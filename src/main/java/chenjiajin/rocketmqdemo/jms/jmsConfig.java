@@ -9,6 +9,11 @@ public class jmsConfig {
      * 设置消费主题
      * 如果没有在控制台手动创建的话，会自动创建
      * 自动创建的主题的队列数默认为4
+     * payConller测试用的topic
      */
     public static final String TOPIC = "cjj_pay_test_topic";
+
+    //订单的topic
+    public static final String ORDER_TOPIC = "cjj_pay_order_topic";
+
 }
