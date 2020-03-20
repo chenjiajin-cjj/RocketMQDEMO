@@ -12,6 +12,9 @@ import org.springframework.stereotype.Component;
 
 import java.io.UnsupportedEncodingException;
 
+/**
+ * 消费者
+ */
 @Component
 public class PayConsumer {
 
@@ -33,6 +36,7 @@ public class PayConsumer {
             MessageExt msg = msgs.get(0);
             //获取消息重复消费次数
             int times = msg.getReconsumeTimes();
+            System.out.println("重试次数=" + times);
             try {
                 System.out.printf("%s Receive New Messages: %s %n",
                         Thread.currentThread().getName(), new String(msgs.get(0).getBody()));
