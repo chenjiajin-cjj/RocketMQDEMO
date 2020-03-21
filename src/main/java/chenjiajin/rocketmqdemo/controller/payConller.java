@@ -82,7 +82,7 @@ public class payConller {
         String uuid = UUID.randomUUID().toString().replaceAll("-", "");
 
         //往队列里赛消息
-        Message message = new Message(jmsConfig.TOPIC, "taga", uuid, ("hello world rocketmq = " + json).getBytes());
+        Message message = new Message(jmsConfig.TOPIC, "test", uuid, ("hello world rocketmq = " + json).getBytes());
 
         //设置延时等级1是1s
         message.setDelayTimeLevel(1);
@@ -107,7 +107,7 @@ public class payConller {
         String uuid = UUID.randomUUID().toString().replaceAll("-", "");
 
         //往队列里赛消息
-        Message message = new Message(jmsConfig.TOPIC, "taga", uuid, ("hello world rocketmq = " + json).getBytes());
+        Message message = new Message(jmsConfig.TOPIC, "testtt", uuid, ("hello world rocketmq = " + json).getBytes());
 
         //设置发送的延迟时间 1是1s
         message.setDelayTimeLevel(1);
@@ -143,7 +143,7 @@ public class payConller {
         String uuid = UUID.randomUUID().toString().replaceAll("-", "");
 
         //往队列里赛消息
-        Message message = new Message(jmsConfig.TOPIC, "taga", uuid, ("hello world rocketmq = " + json).getBytes());
+        Message message = new Message(jmsConfig.TOPIC, "", uuid, ("hello world rocketmq = " + json).getBytes());
 
         //设置延时等级1是1s
         message.setDelayTimeLevel(1);
@@ -182,10 +182,10 @@ public class payConller {
         String uuid = UUID.randomUUID().toString().replaceAll("-", "");
 
         //往队列里赛消息
-        Message message = new Message(jmsConfig.TOPIC, "taga", uuid, ("hello world rocketmq = " + json).getBytes());
+        Message message = new Message(jmsConfig.TOPIC, "tage", uuid, ("hello world rocketmq = " + json).getBytes());
 
         //设置延时等级1是1s
-        message.setDelayTimeLevel(1);
+//        message.setDelayTimeLevel(1);
 
         //异步选择队列进行发送
         payProducer.getProducer().send(message, new MessageQueueSelector() {
@@ -202,7 +202,7 @@ public class payConller {
                 System.out.println("异步选择队列发送:" + queneNum);
                 return mqs.get(queneNum);
             }
-        }, 1, new SendCallback() {
+        }, 3, new SendCallback() {
             //发送成功的回调
             @Override
             public void onSuccess(SendResult sendResult) {

@@ -39,7 +39,7 @@ public class OrderController {
         for (int i = 0; i < list.size(); i++) {
             ProductOrder order = list.get(i);
             //创建一条消息
-            Message message = new Message(jmsConfig.ORDER_TOPIC, "orderTag", order.getOrderId() + "", order.toString().getBytes());
+            Message message = new Message(jmsConfig.ORDER_TOPIC, "", order.getOrderId() + "", order.toString().getBytes());
             //同步指定队列发送
             SendResult sendResult = payProducer.getProducer().send(message, new MessageQueueSelector() {
                 @Override
@@ -49,7 +49,7 @@ public class OrderController {
                     return list.get((int) index);
                 }
             }, order.getOrderId());
-            System.out.printf("发送结果=%s, sendResult=%s ,orderid=%s,orderType=%s\n", sendResult.getSendStatus(), sendResult.toString(),order.getOrderId(),order.getType());
+            System.out.printf("订单发送结果=%s, sendResult=%s ,orderid=%s,orderType=%s\n", sendResult.getSendStatus(), sendResult.toString(),order.getOrderId(),order.getType());
         }
 
         return null;
