@@ -64,7 +64,7 @@ public class payConller {
             同步发送有返回值
          */
         SendResult sendResult = payProducer.getProducer().send(message);
-        System.out.printf("发送结果=%s, msg=%s", sendResult.getSendStatus(), sendResult.toString());
+        System.out.printf("发送结果=%s, msg=%s \n", sendResult.getSendStatus(), sendResult.toString());
 
         return "send synchronous no key ok";
     }
