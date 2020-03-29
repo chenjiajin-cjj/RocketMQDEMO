@@ -111,7 +111,7 @@ class TransactionListenerImpl implements TransactionListener {
 
     /**
      * 回查消息，要么commit要么rollback  reconsumeTimes不生效
-     *
+     * 只有在处理 半消息发送 UNKNOW 的时候才会触发回查消息
      * @param messageExt
      * @return
      */
@@ -123,7 +123,9 @@ class TransactionListenerImpl implements TransactionListener {
         String transactionId = messageExt.getTransactionId();   //获取事务的id
         System.out.println("transactionId=" + transactionId + ",key=" + key + ",body=" + body);
         //要么commit  要么rollback
-
+//        return LocalTransactionState.COMMIT_MESSAGE;
+//        return LocalTransactionState.ROLLBACK_MESSAGE;
+//        return LocalTransactionState.UNKNOW;
         //可以根据key 去检查本地事务消息是否完成
         return null;
     }
