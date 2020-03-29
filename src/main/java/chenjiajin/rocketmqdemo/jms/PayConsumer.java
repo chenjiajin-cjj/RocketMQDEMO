@@ -38,6 +38,8 @@ public class PayConsumer {
         //广播模式，所有节点都会进行消费  运用场景，比如群聊之类的鬼东西
 //        consumer.setMessageModel(MessageModel.BROADCASTING);
         consumer.registerMessageListener((MessageListenerConcurrently) (msgs, context) -> {
+            System.out.println("size:"+msgs.size());
+            //即使msg一次性发了很多过来，但是每次还是一条条消费，所以就取了get(0)
             MessageExt msg = msgs.get(0);
             //获取消息重复消费次数
             int times = msg.getReconsumeTimes();

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -63,7 +64,18 @@ public class payConller {
             send如果入参是单值   是同步发送 一收到就发出去，如果发送失败会进行重试
             同步发送有返回值
          */
-        SendResult sendResult = payProducer.getProducer().send(message);
+//        SendResult sendResult = payProducer.getProducer().send(message);
+
+        /**
+         * 也可以发送多条消息
+         * 虽然是一次性发了三条出去，但是在消费者端是分别三次消费而不是一次性消费
+         */
+        List<Message> msg = new ArrayList<>();
+        msg.add(new Message(jmsConfig.TOPIC, "tag1", ("hello world rocketmq1 = " + json).getBytes()));
+        msg.add(new Message(jmsConfig.TOPIC, "tag2", ("hello world rocketmq2 = " + json).getBytes()));
+        msg.add(new Message(jmsConfig.TOPIC, "tag3", ("hello world rocketmq3 = " + json).getBytes()));
+        SendResult sendResult = payProducer.getProducer().send(msg);
+
         System.out.printf("发送结果=%s, msg=%s \n", sendResult.getSendStatus(), sendResult.toString());
 
         return "send synchronous no key ok";
@@ -111,7 +123,6 @@ public class payConller {
 
         //设置发送的延迟时间 1是1s
         message.setDelayTimeLevel(1);
-
         //异步发送
         payProducer.getProducer().send(message, new SendCallback() {
             //然后直接获得返回结果
