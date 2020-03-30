@@ -77,7 +77,7 @@ public class payConller {
         SendResult sendResult = payProducer.getProducer().send(msg);
 
         System.out.printf("发送结果=%s, msg=%s \n", sendResult.getSendStatus(), sendResult.toString());
-
+//        throw new Exception("测试异常");
         return "send synchronous no key ok";
     }
 
@@ -101,7 +101,6 @@ public class payConller {
 
         //同步发送直接发
         SendResult sendResult = payProducer.getProducer().send(message);
-
         System.out.printf("发送结果=%s, msg=%s", sendResult.getSendStatus(), sendResult.toString());
         return "send synchronous have key ok";
     }
