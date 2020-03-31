@@ -51,7 +51,7 @@ public class OrderConsumer {
                 try {
                     MessageExt msg = list.get(0);
                     OrerInfo orerInfo = JSONObject.parseObject(msg.getBody(), OrerInfo.class);
-                    int res = orerInfoMapper.insert(orerInfo);
+                    int res = orerInfoMapper.addOrder("55", orerInfo.getOrderName(), orerInfo.getOrderCreate(), orerInfo.getOrderType(), orerInfo.getOrderProductId(), orerInfo.getOrderUserId());
                     if (res > 0) {
                         System.out.printf("订单消费完成：%s Receive New Messages: %s %n", Thread.currentThread().getName(), new String(msg.getBody()));
                         return ConsumeOrderlyStatus.SUCCESS;

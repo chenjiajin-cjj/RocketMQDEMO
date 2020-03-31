@@ -62,6 +62,7 @@ public class OrerInfoServiceImpl extends ServiceImpl<OrerInfoMapper, OrerInfo> i
                     System.out.println("发送失败");
                 }
             });
+            return "ppppp";
         } catch (MQClientException e) {
             e.printStackTrace();
         } catch (RemotingException e) {
