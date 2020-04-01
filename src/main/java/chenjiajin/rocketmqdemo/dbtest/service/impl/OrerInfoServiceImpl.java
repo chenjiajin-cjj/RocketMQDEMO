@@ -5,6 +5,8 @@ import chenjiajin.rocketmqdemo.dbtest.mapper.OrerInfoMapper;
 import chenjiajin.rocketmqdemo.dbtest.service.IOrerInfoService;
 import chenjiajin.rocketmqdemo.jms.PayProducer;
 import chenjiajin.rocketmqdemo.jms.jmsConfig;
+import chenjiajin.rocketmqdemo.redisall.service.IRedisCache;
+import cn.hutool.system.UserInfo;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import org.apache.rocketmq.client.exception.MQBrokerException;
@@ -32,6 +34,10 @@ public class OrerInfoServiceImpl extends ServiceImpl<OrerInfoMapper, OrerInfo> i
     //注入mq的配置
     @Autowired
     private PayProducer payProducer;
+
+    @Autowired
+    private IRedisCache iRedisCache;
+
     @Override
     public Object addToOrder(String json) {
         //设置唯一的uuid
@@ -40,7 +46,6 @@ public class OrerInfoServiceImpl extends ServiceImpl<OrerInfoMapper, OrerInfo> i
         Message message = new Message(TOPIC, "", uuid, json.getBytes());
         //设置发送的延迟时间 1是1s
         message.setDelayTimeLevel(0);
-        int a = 0;
         //异步发送
         try {
             payProducer.getProducer().send(message, new SendCallback() {
