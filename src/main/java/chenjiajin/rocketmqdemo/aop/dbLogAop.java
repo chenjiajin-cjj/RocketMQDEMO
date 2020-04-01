@@ -11,13 +11,12 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 
 @Aspect
 @Configuration
 @Slf4j
-public class LogAop {
+public class dbLogAop {
 
     /**
      * 进入方法时间戳
@@ -28,7 +27,8 @@ public class LogAop {
      */
     private Long endTime;
 
-    private final String operateLogPoint = "execution(* chenjiajin.rocketmqdemo.controller.*.*(..))";
+    private final String operateLogPoint = "execution(* chenjiajin.rocketmqdemo.dbtest.web.*.*(..))";
+//    private final String operateLogPoint = "execution(* chenjiajin.rocketmqdemo.controller.*.*(..))";
 
     @Pointcut(operateLogPoint)//切点
     public void webLog() {
