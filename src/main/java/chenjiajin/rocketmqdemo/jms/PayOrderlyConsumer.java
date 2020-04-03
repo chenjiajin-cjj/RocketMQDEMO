@@ -34,6 +34,29 @@ public class PayOrderlyConsumer {
         //定义消费的主题 好像这个和生产的主题一样就行了
         consumer.subscribe(jmsConfig.ORDER_TOPIC, "*");
         //MessageListenerOrderly 代表我要顺序消费
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         consumer.registerMessageListener(new MessageListenerOrderly() {
             @Override
             public ConsumeOrderlyStatus consumeMessage(List<MessageExt> list, ConsumeOrderlyContext consumeOrderlyContext) {
@@ -52,4 +75,16 @@ public class PayOrderlyConsumer {
         consumer.start();
         System.out.println("payOrder consumer start .....");
     }
+
+
+
+
+
+
+
+
+
+
+
+
 }

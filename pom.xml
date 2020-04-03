@@ -35,7 +35,7 @@
             <artifactId>UserAgentUtils</artifactId>
             <version>1.20</version>
         </dependency>
-        <!--        日志注解slf4j-->
+        <!--日志注解slf4j-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -51,7 +51,7 @@
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>4.6.4</version>
+            <version>5.2.5</version>
         </dependency>
         <!--redis 操作-->
         <dependency>
