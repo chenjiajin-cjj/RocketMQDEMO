@@ -1,15 +1,16 @@
 package chenjiajin.rocketmqdemo.controller;
 
 import chenjiajin.rocketmqdemo.dbtest.entity.OrerInfo;
-import chenjiajin.rocketmqdemo.redisall.service.IRedisCache;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import redis.clients.jedis.Jedis;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,30 +23,24 @@ import java.util.List;
 public class RedisController {
 
     @Autowired
-    private IRedisCache iRedisCache;
+    private RedisTemplate<String, Object> redisTemplate;
 
 
-    @GetMapping("string")
+    @GetMapping("/string/string")
     public Object stringRedis() throws Exception {
-        boolean result = iRedisCache.set("tt","我是天才啊哈哈哈哈",10);
-        if(result){
-            return iRedisCache.get("tt");
-        }
-        return "失败了";
+        redisTemplate.opsForValue().set("tt", "val");
+        return redisTemplate.opsForValue().get("tt");
     }
 
-    @GetMapping("object")
+    @GetMapping("/string/object")
     public Object objectRedis() throws Exception {
         OrerInfo orerInfo = new OrerInfo();
         orerInfo.setOrderName("我是天才啊啊哈哈哈哈哈啊");
-        boolean result = iRedisCache.set("object",orerInfo);
-        if(result){
-            return iRedisCache.get("object");
-        }
-        return "失败了";
+        redisTemplate.opsForValue().set("object", orerInfo);
+        return redisTemplate.opsForValue().get("object");
     }
 
-    @GetMapping("list")
+    @GetMapping("/string/list")
     public Object listRedis() throws Exception {
         List<OrerInfo> list = new ArrayList<>();
         OrerInfo orerInfo = new OrerInfo();
@@ -54,10 +49,36 @@ public class RedisController {
         orerInfo = new OrerInfo();
         orerInfo.setOrderName("陈嘉劲666666");
         list.add(orerInfo);
-        boolean result = iRedisCache.set("list",list);
-        if(result){
-            return iRedisCache.get("list");
-        }
-        return "失败了";
+        redisTemplate.opsForValue().set("list", list);
+        return redisTemplate.opsForValue().get("list");
     }
+
+    @GetMapping("/list/list")
+    public Object listListRedis() throws Exception {
+        List<OrerInfo> list = new ArrayList<>();
+        OrerInfo orerInfo = new OrerInfo();
+        orerInfo.setOrderName("我是天才啊啊哈哈哈哈哈啊");
+        list.add(orerInfo);
+        orerInfo = new OrerInfo();
+        orerInfo.setOrderName("陈嘉劲666666");
+        list.add(orerInfo);
+        redisTemplate.opsForList().leftPush("listha", list);
+        return redisTemplate.opsForList().range("listha",0,-1);
+    }
+
+    @GetMapping("/set/set")
+    public Object setSetList() throws Exception {
+        List<OrerInfo> list = new ArrayList<>();
+        OrerInfo orerInfo = new OrerInfo();
+        orerInfo.setOrderName("我是天才啊啊哈哈哈哈哈啊");
+        list.add(orerInfo);
+        orerInfo = new OrerInfo();
+        orerInfo.setOrderName("陈嘉劲666666");
+        list.add(orerInfo);
+        redisTemplate.opsForSet().add("setsa","ppp","ssss","222","dsasd",list);
+
+
+        return redisTemplate.opsForSet().members("setsa");
+    }
+
 }

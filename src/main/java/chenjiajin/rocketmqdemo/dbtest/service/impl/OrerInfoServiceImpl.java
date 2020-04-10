@@ -5,7 +5,6 @@ import chenjiajin.rocketmqdemo.dbtest.mapper.OrerInfoMapper;
 import chenjiajin.rocketmqdemo.dbtest.service.IOrerInfoService;
 import chenjiajin.rocketmqdemo.jms.PayProducer;
 import chenjiajin.rocketmqdemo.jms.jmsConfig;
-import chenjiajin.rocketmqdemo.redisall.service.IRedisCache;
 import cn.hutool.system.UserInfo;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
@@ -35,8 +34,6 @@ public class OrerInfoServiceImpl extends ServiceImpl<OrerInfoMapper, OrerInfo> i
     @Autowired
     private PayProducer payProducer;
 
-    @Autowired
-    private IRedisCache iRedisCache;
 
     @Override
     public Object addToOrder(String json) {

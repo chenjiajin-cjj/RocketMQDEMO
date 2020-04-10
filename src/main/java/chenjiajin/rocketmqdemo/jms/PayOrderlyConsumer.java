@@ -35,28 +35,6 @@ public class PayOrderlyConsumer {
         consumer.subscribe(jmsConfig.ORDER_TOPIC, "*");
         //MessageListenerOrderly 代表我要顺序消费
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         consumer.registerMessageListener(new MessageListenerOrderly() {
             @Override
             public ConsumeOrderlyStatus consumeMessage(List<MessageExt> list, ConsumeOrderlyContext consumeOrderlyContext) {
