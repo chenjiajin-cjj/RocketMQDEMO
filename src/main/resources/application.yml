@@ -1,6 +1,9 @@
 server:
   port: 9977
 spring:
+  banner:
+    location:
+      banner.txt
   datasource:
     # 使用druid数据源
     type: com.alibaba.druid.pool.DruidDataSource
