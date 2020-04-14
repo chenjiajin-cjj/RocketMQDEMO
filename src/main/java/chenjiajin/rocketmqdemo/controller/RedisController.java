@@ -1,19 +1,15 @@
 package chenjiajin.rocketmqdemo.controller;
 
 import chenjiajin.rocketmqdemo.dbtest.entity.OrerInfo;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Component;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import redis.clients.jedis.Jedis;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/redis")
@@ -29,6 +25,7 @@ public class RedisController {
     @GetMapping("/string/string")
     public Object stringRedis() throws Exception {
         redisTemplate.opsForValue().set("tt", "val");
+        redisTemplate.expire("tt",20000, TimeUnit.MILLISECONDS);
         return redisTemplate.opsForValue().get("tt");
     }
 
@@ -37,6 +34,7 @@ public class RedisController {
         OrerInfo orerInfo = new OrerInfo();
         orerInfo.setOrderName("我是天才啊啊哈哈哈哈哈啊");
         redisTemplate.opsForValue().set("object", orerInfo);
+        redisTemplate.expire("object",20000, TimeUnit.MILLISECONDS);
         return redisTemplate.opsForValue().get("object");
     }
 
@@ -50,6 +48,7 @@ public class RedisController {
         orerInfo.setOrderName("陈嘉劲666666");
         list.add(orerInfo);
         redisTemplate.opsForValue().set("list", list);
+        redisTemplate.expire("list",20000, TimeUnit.MILLISECONDS);
         return redisTemplate.opsForValue().get("list");
     }
 
@@ -63,6 +62,7 @@ public class RedisController {
         orerInfo.setOrderName("陈嘉劲666666");
         list.add(orerInfo);
         redisTemplate.opsForList().leftPush("listha", list);
+        redisTemplate.expire("listha",20000, TimeUnit.MILLISECONDS);
         return redisTemplate.opsForList().range("listha",0,-1);
     }
 
@@ -70,14 +70,14 @@ public class RedisController {
     public Object setSetList() throws Exception {
         List<OrerInfo> list = new ArrayList<>();
         OrerInfo orerInfo = new OrerInfo();
-        orerInfo.setOrderName("我是天才啊啊哈哈哈哈哈啊");
+        orerInfo.setOrderName("我是天才啊啊哈哈哈哈哈啊1");
         list.add(orerInfo);
         orerInfo = new OrerInfo();
         orerInfo.setOrderName("陈嘉劲666666");
         list.add(orerInfo);
         redisTemplate.opsForSet().add("setsa","ppp","ssss","222","dsasd",list);
-
-
+        //设置key的过期时间，过期的时间单位为毫秒
+        redisTemplate.expire("setsa",20000, TimeUnit.MILLISECONDS);
         return redisTemplate.opsForSet().members("setsa");
     }
 

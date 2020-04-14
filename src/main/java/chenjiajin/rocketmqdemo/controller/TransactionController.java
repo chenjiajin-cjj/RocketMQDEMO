@@ -1,14 +1,11 @@
 package chenjiajin.rocketmqdemo.controller;
 
-import chenjiajin.rocketmqdemo.jms.PayProducer;
 import chenjiajin.rocketmqdemo.jms.TransactionProducen;
 import chenjiajin.rocketmqdemo.jms.jmsConfig;
 import org.apache.rocketmq.client.producer.SendResult;
-import org.apache.rocketmq.client.producer.TransactionMQProducer;
 import org.apache.rocketmq.common.message.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
