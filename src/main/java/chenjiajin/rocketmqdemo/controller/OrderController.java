@@ -42,10 +42,21 @@ public class OrderController {
             Message message = new Message(jmsConfig.ORDER_TOPIC, "", order.getOrderId() + "", order.toString().getBytes());
             //同步指定队列发送
             SendResult sendResult = payProducer.getProducer().send(message, new MessageQueueSelector() {
+                /**
+                 *
+                 * @param list      队列集合
+                 * @param message   消息对象
+                 * @param o         业务标识的参数    o是order.getOrderId()的入参值
+                 * @return
+                 */
                 @Override
                 public MessageQueue select(List<MessageQueue> list, Message message, Object o) {
+                    int queneNum = Integer.parseInt(o.toString());
+                    System.out.println("模拟订单选择队列发送:" + queneNum);
                     Long id = (Long) o;
+                    //这里取余出订单集合号
                     long index = id % list.size();
+                    //到这里才算正式发送出去
                     return list.get((int) index);
                 }
             }, order.getOrderId());

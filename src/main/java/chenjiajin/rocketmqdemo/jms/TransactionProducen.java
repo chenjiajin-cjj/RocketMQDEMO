@@ -42,7 +42,7 @@ public class TransactionProducen {
         //指定NameServer地址，多个地址以 ; 隔开
         //如producer.setNamesrvAddr(127.0.0.1:9876;192.168.1.1:8081);
         producer.setNamesrvAddr(jmsConfig.NAME_SERVER_ADDR);
-
+        //事务监听器，对半消息进行提交或者回滚
         producer.setTransactionListener(transactionListener);
 
         producer.setExecutorService(executorService);
@@ -112,6 +112,7 @@ class TransactionListenerImpl implements TransactionListener {
     /**
      * 回查消息，要么commit要么rollback  reconsumeTimes不生效
      * 只有在处理 半消息发送 UNKNOW 的时候才会触发回查消息
+     *
      * @param messageExt
      * @return
      */
@@ -127,6 +128,7 @@ class TransactionListenerImpl implements TransactionListener {
 //        return LocalTransactionState.ROLLBACK_MESSAGE;
 //        return LocalTransactionState.UNKNOW;
         //可以根据key 去检查本地事务消息是否完成
+        //伪代码 查询数据库的某个条件是否完成，进行提交或者遗弃
         return null;
     }
 }
