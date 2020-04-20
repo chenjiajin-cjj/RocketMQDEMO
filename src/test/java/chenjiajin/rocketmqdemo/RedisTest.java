@@ -20,10 +20,33 @@ public class RedisTest {
         System.out.println(oo);
     }
 
-
     public <T> T test(T t) {
         return t;
     }
 
+    /**
+     * lambda 写线程
+     * @throws Exception
+     */
+    @Test
+    public void ppasd() throws Exception{
+        Thread thread = new Thread(() -> {
+            System.out.println("通过Runnable实现多线程，名称：" + Thread.currentThread().getName());
+            System.out.println("通过Runnable实现多线程，名称：" + Thread.currentThread().getName());
+            System.out.println("通过Runnable实现多线程，名称：" + Thread.currentThread().getName());
+            System.out.println("通过Runnable实现多线程，名称：" + Thread.currentThread().getName());
+            System.out.println("通过Runnable实现多线程，名称：" + Thread.currentThread().getName());
+            System.out.println("通过Runnable实现多线程，名称：" + Thread.currentThread().getName());
+            System.out.println("通过Runnable实现多线程，名称：" + Thread.currentThread().getName());
+            System.out.println("通过Runnable实现多线程，名称：" + Thread.currentThread().getName());
+            System.out.println("通过Runnable实现多线程，名称：" + Thread.currentThread().getName());
+            System.out.println("通过Runnable实现多线程，名称：" + Thread.currentThread().getName());
+
+        });
+        thread.setName("sdsdsdsdsdsd");
+        thread.start();
+        Thread.sleep(2000);
+        System.out.println("99999");
+    }
 
 }
