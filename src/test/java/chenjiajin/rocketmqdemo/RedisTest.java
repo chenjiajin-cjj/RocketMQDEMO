@@ -1,6 +1,8 @@
 package chenjiajin.rocketmqdemo;
 
 import chenjiajin.rocketmqdemo.dbtest.entity.OrerInfo;
+import chenjiajin.rocketmqdemo.study.Annotationdemo.MyAnnotation;
+import lombok.val;
 import org.junit.Test;
 import org.springframework.data.redis.core.RedisTemplate;
 import redis.clients.jedis.Jedis;
